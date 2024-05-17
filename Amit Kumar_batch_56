@@ -1,0 +1,44 @@
+Step 5: Verify that for voting and results pods have NodePort assigned.
+Result :
+service/result       NodePort    10.110.220.173   <none>        5001:31001/TCP   147m
+service/vote         NodePort    10.98.42.74      <none>        5000:31000/TCP   147m
+
+Step 6: Verify that Voting and Result app is opening with below ip's in 2 different browsers-tab
+Voting : http://13.214.140.36:31000/
+REsult : http://13.214.140.36:31001/
+
+Step 7: Verify that in Voting app, when any of the option of CATS/DOGS are pressed the Result page is changed.
+Result:
+Open 2 different instances of Voting and Result, and click on DOGS once and CATS once, and result is 50% for both.
+
+Step 8: Verify Vote pod is deleted
+Result: 
+root@ip-172-31-10-42:~# kubectl delete po vote-7d884dd585-bsw8x
+pod "vote-7d884dd585-bsw8x" deleted
+Check in command line again
+Result: 
+NAME                      READY   STATUS    RESTARTS      AGE
+db-58cc845644-qzr8v       1/1     Running   0             15m
+redis-6878558678-bc54p    1/1     Running   0             4h44m
+result-86bc6f7b5d-5g5tr   1/1     Running   1 (14m ago)   16m
+worker-6fc5d5b668-qrc4t   1/1     Running   1 (14m ago)   4h44m
+
+Verify Result pod is deleted
+Result:
+root@ip-172-31-10-42:~# kubectl delete po result-86bc6f7b5d-6lmg9
+pod "result-86bc6f7b5d-6lmg9" deleted
+Every 2.0s: kubectl get po  ip-172-31-10-42: Fri May 17 11:59:34 2024
+
+NAME                      READY   STATUS    RESTARTS      AGE
+db-58cc845644-qzr8v       1/1     Running   0             17m
+redis-6878558678-bc54p    1/1     Running   0             4h47m
+worker-6fc5d5b668-qrc4t   1/1     Running   1 (17m ago)   4h47m
+
+Delete DB POD
+root@ip-172-31-10-42:~# kubectl delete po db-58cc845644-wgjp2
+pod "db-58cc845644-wgjp2" deleted
+Result:
+The Worker pod and result po both restarts, and that is the reason why Result pod stops working after DB pod is deted
+
+Wait for sometime
+DB pod is re-created and all the apps are up again and working.
